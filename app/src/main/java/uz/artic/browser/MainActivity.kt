@@ -157,8 +157,8 @@ class MainActivity : Activity() {
         if (bm.isNotEmpty()) {
             sb.append("<div class='section'>Xatcho'plar</div>")
             for (item in bm) {
-                sb.append("<a class='b' href='").append(esc(item.substringBefore('\\t'))).append("'>")
-                    .append(esc(item.substringAfter('\\t'))).append("</a>")
+                sb.append("<a class='b' href='").append(esc(item.substringBefore('\t'))).append("'>")
+                    .append(esc(item.substringAfter('\t'))).append("</a>")
             }
         }
         sb.append("</main></body></html>")
