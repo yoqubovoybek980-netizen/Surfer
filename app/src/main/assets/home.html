@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SurfeTheNet</title>
+<style>
+:root{--bg:#202124;--card:#303134;--chip:#2d2e31;--line:#3c4043;--txt:#e8eaed;--mut:#9aa0a6;--acc:#8ab4f8}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:Roboto,system-ui,sans-serif;padding:0 0 32px}
+.top{display:flex;justify-content:flex-end;padding:14px 16px 0}
+.avatar{width:42px;height:42px;border-radius:50%;border:0;background:var(--acc);color:#202124;font-size:20px;font-weight:600;display:flex;align-items:center;justify-content:center;padding:0}
+.pv{width:84px;height:84px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:600;color:#202124}
+.pick{display:flex;gap:8px;overflow-x:auto;margin:4px 0 12px;scrollbar-width:none}
+.sheet .pick button{flex:none;width:44px;height:44px;padding:0;border-radius:50%;font-size:20px}
+.sheet .pick button.on{outline:2px solid var(--txt)}
+.sheet .full{width:100%;flex:none;margin-bottom:10px}
+.brand{text-align:center;margin:18px 0 26px}
+.brand img{width:64px;height:64px;border-radius:16px;display:block;margin:0 auto 8px}
+.brand .name{font-size:44px;font-weight:600;letter-spacing:-1px}
+.brand .name b{color:var(--acc)}
+.search{margin:0 16px;background:var(--card);border:1px solid var(--line);border-radius:32px;display:flex;align-items:center;padding:0 8px 0 18px;height:60px}
+.search input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--txt);font-size:18px;padding:0 10px}
+.search input::placeholder{color:var(--mut)}
+.search button{background:none;border:0;color:var(--txt);width:44px;height:44px;border-radius:50%;font-size:22px}
+.chips{display:flex;gap:10px;overflow-x:auto;padding:16px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;background:var(--chip);border-radius:24px;padding:14px 20px;font-size:17px;border:0;color:var(--txt)}
+.widgets{display:flex;gap:12px;overflow-x:auto;padding:0 16px 8px;scrollbar-width:none}
+.widgets::-webkit-scrollbar{display:none}
+.w{flex:none;width:44%;min-width:160px;border:1px solid var(--line);border-radius:22px;padding:14px 16px}
+.w .t{font-size:15px;color:var(--txt);display:flex;justify-content:space-between}
+.w .v{font-size:28px;margin-top:10px;font-weight:500}
+.down{color:#f28b82}.up{color:#81c995}
+h2{font-size:15px;color:var(--mut);font-weight:500;margin:22px 16px 10px;display:flex;justify-content:space-between;align-items:center}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 6px;padding:0 10px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;color:var(--txt);font-size:12px;padding:4px;min-width:0}
+.tile .ic{width:52px;height:52px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600;color:var(--acc)}
+.tile span.l{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.news{margin:0 16px 14px;background:var(--chip);border-radius:20px;padding:16px;display:block;text-align:left;border:0;color:var(--txt);width:calc(100% - 32px)}
+.news .h{font-size:18px;line-height:1.3;font-weight:500}
+.news .m{font-size:13px;color:var(--mut);margin-top:8px}
+.mask{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:flex-end;z-index:9}
+.sheet{background:var(--card);width:100%;border-radius:24px 24px 0 0;padding:20px 16px 28px}
+.sheet input{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:14px;font-size:16px;margin-bottom:10px}
+.sheet .row{display:flex;gap:10px;margin-top:6px}
+.sheet button{flex:1;border:0;border-radius:24px;padding:14px;font-size:16px;background:var(--chip);color:var(--txt)}
+.sheet button.p{background:var(--acc);color:#202124;font-weight:600}
+.sheet button.d{background:#8c2f2f}
+.empty{color:var(--mut);padding:0 16px;font-size:14px}
+</style>
+</head>
+<body>
+<div class="top"><button class="avatar" id="avatar" aria-label="Profil">?</button></div>
+
+<div class="brand">
+  <img id="logo" src="logo.png" onerror="this.style.display='none'">
+  <div class="name">Surfe<b>The</b>Net</div>
+</div>
+
+<form class="search" id="f" autocomplete="off">
+  <button type="button" id="plus" aria-label="Xatcho'p qo'shish">＋</button>
+  <input id="q" type="search" enterkeyhint="search" placeholder="Googledan so‘rang">
+  <button type="button" id="mic" aria-label="Gapirish">🎤</button>
+</form>
+
+<div class="chips">
+  <button class="chip" id="chipVoice">🎙 Gapirish</button>
+  <button class="chip" data-u="https://www.google.com/imghp?hl=uz">🖼 Rasmlar</button>
+  <button class="chip" data-u="https://www.google.com/search?tbm=nws&q=yangiliklar">📰 Yangiliklar</button>
+  <button class="chip" data-o="https://translate.google.com/">🌐 Tarjimon</button>
+  <button class="chip" data-o="https://maps.google.com/">🗺 Xaritalar</button>
+</div>
+
+<div class="widgets">
+  <div class="w"><div class="t"><span>USD / UZS</span><span id="rch"></span></div><div class="v" id="rate">…</div></div>
+  <div class="w"><div class="t"><span id="city"></span></div><div class="v" id="wx">…</div></div>
+</div>
+
+<h2>Xatcho‘plar <span id="add" style="color:var(--acc)">+ Qo‘shish</span></h2>
+<div class="grid" id="bm"></div>
+
+<h2>Yangiliklar</h2>
+<div id="news"><div class="empty">Yuklanmoqda…</div></div>
+
+<div class="mask" id="mask"><div class="sheet" id="sheet"></div></div>
+
+<script>
+// ===== SOZLAMALAR =====
+const CITY="Peshku", LAT=40.0333, LON=64.3917;   // Peshku tumani (Yangibozor markazi)
+const NEWS_URL="https://news.google.com/rss?hl=uz&gl=UZ&ceid=UZ:uz";
+const DEFAULT_BM=[
+  {n:"YouTube",u:"https://m.youtube.com/"},
+  {n:"Wikipedia",u:"https://uz.wikipedia.org/"},
+  {n:"GitHub",u:"https://github.com/"},
+  {n:"Telegram",u:"https://web.telegram.org/"}
+];
+// ======================
+const $=s=>document.querySelector(s);
+const A=(typeof Android!=="undefined")?Android:null;
+const openExt=u=>A?A.open(u):window.open(u,"_blank");
+
+function go(q){
+  q=q.trim(); if(!q)return;
+  if(/^https?:\/\//i.test(q)){openExt(q);return;}
+  if(/^[^\s]+\.[a-z]{2,}(\/\S*)?$/i.test(q)){openExt("https://"+q);return;}
+  location.href="https://www.google.com/search?q="+encodeURIComponent(q);
+}
+$("#f").addEventListener("submit",e=>{e.preventDefault();go($("#q").value);$("#q").blur();});
+$("#mic").onclick=$("#chipVoice").onclick=()=>A&&A.voice();
+document.querySelectorAll(".chip[data-u]").forEach(c=>c.onclick=()=>location.href=c.dataset.u);
+document.querySelectorAll(".chip[data-o]").forEach(c=>c.onclick=()=>openExt(c.dataset.o));
+$("#city").textContent=CITY;
+
+// ---- Android.fetch ko'prigi ----
+const cbs={};let n=0;
+window.__cb=(id,ok,t)=>{const f=cbs[id];if(f){delete cbs[id];f(ok,t);}};
+function nfetch(url){
+  return new Promise((res,rej)=>{
+    if(!A){fetch(url).then(r=>r.text()).then(res,rej);return;}
+    const id="c"+(++n);cbs[id]=(ok,t)=>ok?res(t):rej(t);A.fetch(url,id);
+  });
+}
+
+// ---- Dollar kursi ----
+const nf=new Intl.NumberFormat("ru-RU",{minimumFractionDigits:2,maximumFractionDigits:2});
+nfetch("https://open.er-api.com/v6/latest/USD").then(t=>{
+  const v=JSON.parse(t).rates.UZS; $("#rate").textContent=nf.format(v);
+  const today=new Date().toISOString().slice(0,10);
+  let h={};try{h=JSON.parse(localStorage.getItem("rates")||"{}")}catch(e){}
+  const prev=Object.keys(h).filter(d=>d<today).sort().pop();
+  h[today]=v;
+  Object.keys(h).sort().slice(0,-5).forEach(d=>delete h[d]);
+  try{localStorage.setItem("rates",JSON.stringify(h))}catch(e){}
+  if(prev){const p=(v-h[prev])/h[prev]*100;
+    const el=$("#rch");el.textContent=(p>0?"+":"")+p.toFixed(2).replace(".",",")+"%";
+    el.className=p<0?"down":"up";}
+}).catch(()=>$("#rate").textContent="—");
+
+// ---- Ob-havo ----
+function wxIcon(c){return c===0?"☀️":c<=2?"🌤️":c===3?"☁️":c<=48?"🌫️":c<=67?"🌧️":c<=77?"❄️":c<=82?"🌦️":"⛈️";}
+nfetch(`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code&daily=precipitation_probability_max&timezone=auto&forecast_days=1`)
+.then(t=>{const j=JSON.parse(t);
+  const p=j.daily&&j.daily.precipitation_probability_max?j.daily.precipitation_probability_max[0]:null;
+  $("#wx").innerHTML=Math.round(j.current.temperature_2m)+"° "+wxIcon(j.current.weather_code)+
+    (p!=null?` <small style="font-size:14px;color:var(--mut)">💧${p}%</small>`:"");
+}).catch(()=>$("#wx").textContent="—");
+
+// ---- Xatcho'plar ----
+function loadBM(){try{const x=JSON.parse(localStorage.getItem("bm"));if(Array.isArray(x))return x}catch(e){}return DEFAULT_BM.slice();}
+function saveBM(x){try{localStorage.setItem("bm",JSON.stringify(x))}catch(e){}}
+let bms=loadBM();
+function renderBM(){
+  const g=$("#bm");g.innerHTML="";
+  if(!bms.length){g.innerHTML='<div class="empty" style="grid-column:1/-1">Hali xatcho‘p yo‘q</div>';return;}
+  bms.forEach((b,i)=>{
+    const t=document.createElement("button");t.className="tile";
+    t.innerHTML='<div class="ic"></div><span class="l"></span>';
+    t.querySelector(".ic").textContent=(b.n||"?").trim().charAt(0).toUpperCase();
+    t.querySelector(".l").textContent=b.n;
+    let timer=null,long=false;
+    t.addEventListener("touchstart",()=>{long=false;timer=setTimeout(()=>{long=true;confirmDel(i)},600)},{passive:true});
+    ["touchend","touchmove","touchcancel"].forEach(ev=>t.addEventListener(ev,()=>clearTimeout(timer),{passive:true}));
+    t.onclick=()=>{if(!long)openExt(b.u)};
+    g.appendChild(t);
+  });
+}
+const mask=$("#mask"),sheet=$("#sheet");
+const closeSheet=()=>mask.style.display="none";
+mask.addEventListener("click",e=>{if(e.target===mask)closeSheet()});
+function showSheet(html){sheet.innerHTML=html;mask.style.display="flex";}
+function addDlg(){
+  showSheet('<input id="bn" placeholder="Nomi"><input id="bu" placeholder="Havola (masalan: youtube.com)" inputmode="url"><div class="row"><button id="bc">Bekor</button><button class="p" id="bs">Saqlash</button></div>');
+  $("#bc").onclick=closeSheet;
+  $("#bs").onclick=()=>{
+    let n=$("#bn").value.trim(),u=$("#bu").value.trim();
+    if(!u)return; if(!/^https?:\/\//i.test(u))u="https://"+u;
+    if(!n)n=u.replace(/^https?:\/\/(www\.)?/i,"").split("/")[0];
+    bms.push({n,u});saveBM(bms);renderBM();closeSheet();
+  };
+}
+function confirmDel(i){
+  showSheet('<div style="margin-bottom:14px;font-size:17px"></div><div class="row"><button id="bc">Bekor</button><button class="d" id="bd">O‘chirish</button></div>');
+  sheet.firstChild.textContent="“"+bms[i].n+"” o‘chirilsinmi?";
+  $("#bc").onclick=closeSheet;
+  $("#bd").onclick=()=>{bms.splice(i,1);saveBM(bms);renderBM();closeSheet();};
+}
+$("#add").onclick=$("#plus").onclick=addDlg;
+renderBM();
+
+
+// ---- Profil / akkaunt menejeri ----
+const COLORS=["#8ab4f8","#f28b82","#81c995","#fdd663","#c58af9","#ff8bcb","#78d9ec","#fcad70"];
+const EMOJIS=["","😎","🦊","🐯","🚀","⚡","🎮","🌙","🔥","🐼"];
+let prof={name:"",email:"",emoji:"",color:COLORS[0]};
+try{const s=A?A.getProfile():localStorage.getItem("prof");if(s)Object.assign(prof,JSON.parse(s));}catch(e){}
+function initial(p){return (p.emoji||(p.name||p.email||"?").trim().charAt(0).toUpperCase());}
+function applyProf(){
+  document.documentElement.style.setProperty("--acc",prof.color);
+  $("#avatar").textContent=initial(prof);
+}
+function saveProf(){
+  const s=JSON.stringify(prof);
+  if(A)A.saveProfile(s);else try{localStorage.setItem("prof",s)}catch(e){}
+  applyProf();
+}
+let draft=null;
+function drawProf(){
+  const pv=$("#pv");pv.style.background=draft.color;pv.textContent=initial(draft);
+  $("#pe").textContent=draft.email?("Google: "+draft.email):"Google akkaunt ulanmagan";
+  $("#pem").innerHTML="";$("#pco").innerHTML="";
+  EMOJIS.forEach(e=>{const b=document.createElement("button");b.type="button";b.textContent=e||"Aa";
+    if(draft.emoji===e)b.className="on";b.onclick=()=>{draft.emoji=e;drawProf()};$("#pem").appendChild(b);});
+  COLORS.forEach(c=>{const b=document.createElement("button");b.type="button";b.style.background=c;
+    if(draft.color===c)b.className="on";b.onclick=()=>{draft.color=c;drawProf()};$("#pco").appendChild(b);});
+}
+window.__account=email=>{if(!draft)return;draft.email=email;
+  if(!$("#pn").value.trim()){draft.name=email.split("@")[0];$("#pn").value=draft.name;}drawProf();};
+function profDlg(){
+  draft=Object.assign({},prof);
+  showSheet('<div style="text-align:center;margin-bottom:14px"><div class="pv" id="pv"></div><div id="pe" style="color:var(--mut);font-size:13px;margin-top:8px"></div></div>'+
+    '<input id="pn" placeholder="Ismingiz"><div class="pick" id="pem"></div><div class="pick" id="pco"></div>'+
+    '<button type="button" class="full" id="pg">Google akkaunt tanlash</button>'+
+    '<div class="row"><button type="button" id="po">Akkauntni uzish</button><button type="button" class="p" id="ps">Saqlash</button></div>');
+  $("#pn").value=draft.name||"";
+  $("#pn").oninput=()=>{draft.name=$("#pn").value;$("#pv").textContent=initial(draft);};
+  $("#pg").onclick=()=>A&&A.pickAccount();
+  $("#po").onclick=()=>{draft.email="";drawProf();};
+  $("#ps").onclick=()=>{draft.name=$("#pn").value.trim();prof=draft;saveProf();closeSheet();};
+  drawProf();
+}
+$("#avatar").onclick=profDlg;
+applyProf();
+
+// ---- Yangiliklar ----
+function ago(d){const m=Math.max(1,Math.round((Date.now()-d)/60000));
+  return m<60?m+" daqiqa oldin":m<1440?Math.round(m/60)+" soat oldin":Math.round(m/1440)+" kun oldin";}
+nfetch(NEWS_URL).then(t=>{
+  const x=new DOMParser().parseFromString(t,"text/xml");
+  const items=[...x.querySelectorAll("item")].slice(0,12);
+  const box=$("#news");box.innerHTML="";
+  if(!items.length){box.innerHTML='<div class="empty">Yangilik topilmadi</div>';return;}
+  items.forEach(it=>{
+    const src=(it.querySelector("source")||{}).textContent||"";
+    let title=(it.querySelector("title")||{}).textContent||"";
+    if(src&&title.endsWith(" - "+src))title=title.slice(0,-(src.length+3));
+    const link=(it.querySelector("link")||{}).textContent||"";
+    const pd=Date.parse((it.querySelector("pubDate")||{}).textContent||"");
+    const b=document.createElement("button");b.className="news";
+    b.innerHTML='<div class="h"></div><div class="m"></div>';
+    b.querySelector(".h").textContent=title;
+    b.querySelector(".m").textContent=[src,isNaN(pd)?"":ago(pd)].filter(Boolean).join(" · ");
+    b.onclick=()=>openExt(link);
+    box.appendChild(b);
+  });
+}).catch(()=>$("#news").innerHTML='<div class="empty">Yangiliklarni yuklab bo‘lmadi</div>');
+</script>
+</body>
+</html>
